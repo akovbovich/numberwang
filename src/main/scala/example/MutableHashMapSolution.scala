@@ -2,9 +2,10 @@ package example
 
 import scala.annotation.tailrec
 import scala.collection.mutable
+import scala.concurrent.ExecutionContext
 
-final case class MutableHashMapSolution(minInclusive: Int, maxInclusive: Int)
-    extends Solution(minInclusive, maxInclusive) {
+final case class MutableHashMapSolution(minInclusive: Int, maxInclusive: Int)(implicit val ec: ExecutionContext)
+    extends AsyncSolution(minInclusive, maxInclusive) {
 
   private val hashMap =
     mutable.HashMap.from(Iterable.tabulate(math.floor(math.sqrt(maxInclusive.toDouble)).toInt + 1)(i => i * i -> i))

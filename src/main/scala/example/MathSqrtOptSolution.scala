@@ -1,9 +1,10 @@
 package example
 
 import scala.annotation.tailrec
+import scala.concurrent.ExecutionContext
 
-final case class MathSqrtOptSolution(minInclusive: Int, maxInclusive: Int)
-    extends Solution(minInclusive, maxInclusive) {
+final case class MathSqrtOptSolution(minInclusive: Int, maxInclusive: Int)(implicit val ec: ExecutionContext)
+    extends AsyncSolution(minInclusive, maxInclusive) {
 
   override protected def perfectSquareIterations(number: Int): Int = {
     @tailrec def loop(number: Int, count: Int): Int =
