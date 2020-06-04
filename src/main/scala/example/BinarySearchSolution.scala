@@ -1,6 +1,6 @@
 package example
 
-final case class BinarySearchSolution(minInclusive: Int, maxInclusive: Int) extends Solution {
+final case class BinarySearchSolution(private val minInclusive: Int, private val maxInclusive: Int) extends Solution {
   @throws[IllegalArgumentException]
   def solution(a: Int, b: Int): Int = {
     if (a < minInclusive || b > maxInclusive || !(a <= b)) throw new IllegalArgumentException("invalid bounds")
