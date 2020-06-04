@@ -4,9 +4,9 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class SolutionSpec extends AnyFlatSpec with Matchers {
-  implicit val ec                      = scala.concurrent.ExecutionContext.global
-  val mutableHashMapSolution: Solution = new MutableHashMapSolution(2, 1_000_000_000)
-  val mathSqrtOptSolution: Solution    = new MathSqrtOptSolution(2, 1_000_000_000)
+  implicit val ec            = scala.concurrent.ExecutionContext.global
+  val mutableHashMapSolution = MutableHashMapSolution(2, 1_000_000_000)
+  val mathSqrtOptSolution    = MathSqrtOptSolution(2, 1_000_000_000)
 
   def withSolutions(solutions: Solution*)(test: Solution => Any) =
     solutions.foreach { s =>
