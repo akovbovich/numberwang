@@ -10,7 +10,10 @@ abstract class Solution {
   protected val minInclusive: Int
   protected val maxInclusive: Int
 
-  protected def maxPerfectSquareIterations(range: Range): Int
+  protected def perfectSquareIterations(number: Int): Int
+
+  private def maxPerfectSquareIterationsInRange(range: Range): Int =
+    range.foldLeft(0)((m, i) => math.max(m, perfectSquareIterations(i)))
 
   @throws[IllegalArgumentException]
   final def solution(a: Int, b: Int): Int = {
@@ -20,6 +23,9 @@ abstract class Solution {
     val rangeCount = range.knownSize / numCores
     val minSlice   = 32 * 1024
     val rangeParts = if (rangeCount > 0) range.grouped(math.max(rangeCount, minSlice)) else Iterator(range)
-    Await.result(Future.traverse(rangeParts)(part => Future(maxPerfectSquareIterations(part))).map(_.max), Duration.Inf)
+    Await.result(
+      Future.traverse(rangeParts)(part => Future(maxPerfectSquareIterationsInRange(part))).map(_.max),
+      Duration.Inf
+    )
   }
 }
