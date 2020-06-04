@@ -13,13 +13,16 @@ abstract class Solution(minInclusive: Int, maxInclusive: Int) {
   @throws[IllegalArgumentException]
   final def solution(a: Int, b: Int)(implicit ec: ExecutionContext): Int = {
     if (a < minInclusive || b > maxInclusive || !(a <= b)) throw new IllegalArgumentException("invalid bounds")
-    val range      = a to b
-    val numCores   = Runtime.getRuntime().availableProcessors()
-    val rangeCount = range.knownSize / numCores
-    val minSlice   = 32 * 1024
-    val rangeParts = if (rangeCount > 0) range.grouped(math.max(rangeCount, minSlice)) else Iterator(range)
+    val range       = a to b
+    val numCores    = Runtime.getRuntime().availableProcessors()
+    val partSize    = range.knownSize / numCores
+    val minPartSize = 32 * 1024
     Await.result(
-      Future.traverse(rangeParts)(part => Future(maxPerfectSquareIterationsInRange(part))).map(_.max),
+      Future
+        .traverse(range.grouped(math.max(minPartSize, partSize)))(part =>
+          Future(maxPerfectSquareIterationsInRange(part))
+        )
+        .map(_.max),
       Duration.Inf
     )
   }
