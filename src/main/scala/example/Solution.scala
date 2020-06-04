@@ -17,12 +17,9 @@ abstract class Solution(minInclusive: Int, maxInclusive: Int) {
     val numCores    = Runtime.getRuntime().availableProcessors()
     val partSize    = range.knownSize / numCores
     val minPartSize = 32 * 1024
+    val rangeParts  = range.grouped(math.max(minPartSize, partSize))
     Await.result(
-      Future
-        .traverse(range.grouped(math.max(minPartSize, partSize)))(part =>
-          Future(maxPerfectSquareIterationsInRange(part))
-        )
-        .map(_.max),
+      Future.traverse(rangeParts)(part => Future(maxPerfectSquareIterationsInRange(part))).map(_.max),
       Duration.Inf
     )
   }
