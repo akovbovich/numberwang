@@ -8,11 +8,9 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext
 
 sealed abstract class Solution {
-  val minInclusive: Int
-  val maxInclusive: Int
-
-  implicit val ec: ExecutionContext
-
+  protected val minInclusive: Int
+  protected val maxInclusive: Int
+  protected implicit val ec: ExecutionContext
   protected def maxPerfectSquareIterations(range: Range): Int
 
   @throws[IllegalArgumentException]
@@ -27,7 +25,7 @@ sealed abstract class Solution {
   }
 }
 
-final class MutableHashMapSolution(val minInclusive: Int, val maxInclusive: Int)(implicit val ec: ExecutionContext)
+final case class MutableHashMapSolution(val minInclusive: Int, val maxInclusive: Int)(implicit val ec: ExecutionContext)
     extends Solution {
   private val hashMap =
     mutable.HashMap.from(Iterable.tabulate(math.floor(math.sqrt(maxInclusive.toDouble)).toInt + 1)(i => i * i -> i))
@@ -43,7 +41,7 @@ final class MutableHashMapSolution(val minInclusive: Int, val maxInclusive: Int)
     }
 }
 
-final class MathSqrtOptSolution(val minInclusive: Int, val maxInclusive: Int)(implicit val ec: ExecutionContext)
+final case class MathSqrtOptSolution(val minInclusive: Int, val maxInclusive: Int)(implicit val ec: ExecutionContext)
     extends Solution {
   override protected def maxPerfectSquareIterations(range: Range): Int =
     range.foldLeft(0)((m, i) => math.max(m, perfectSquareIterations(i)))
